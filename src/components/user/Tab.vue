@@ -3,23 +3,23 @@
         <v-tabs color="grey lighten-3"
             slider-color="blue">
             <v-tab ripple>
-                List
+                Lista
             </v-tab>
             
             <v-tab ripple>
-                Query
+                Consulta
             </v-tab>
 
             <v-tab ripple>
-                Create
+                Novo
             </v-tab>
 
             <v-tab ripple>
-                Update
+                Altera
             </v-tab>
 
             <v-tab ripple>
-                Remove.vue
+                Remove
             </v-tab>
 
             <v-tab-item>

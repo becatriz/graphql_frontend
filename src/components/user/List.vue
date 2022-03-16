@@ -48,7 +48,7 @@ export default {
     },
     methods: {
         getUsers() {
-            // 
+            console.log("Obe");
         }
     }
 }

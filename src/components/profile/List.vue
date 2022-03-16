@@ -13,7 +13,7 @@
                 </div>
             </v-flex>
             <v-flex>
-                <v-data-table :headers="headers" :items="perfis" 
+                <v-data-table :headers="headers" :items="profiles" 
                     hide-actions class="elevation-1">
                     <template slot="items" slot-scope="props">
                         <td>{{ props.item.id }}</td>
