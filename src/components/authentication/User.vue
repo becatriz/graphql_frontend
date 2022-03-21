@@ -18,7 +18,7 @@
             </v-flex>
             <v-flex shrink>
                 <v-btn color="error"
-                    @click="setuser(null)">
+                    @click="setUser(null)">
                     Sair
                 </v-btn>
             </v-flex>
@@ -32,12 +32,12 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: {
         ...mapGetters(['user']),
-        perfis() {
+        profiles() {
             if(!this.user && !this.user.profiles) return null
-            return this.user.profiles.map(p => p.name).join(', ')
+            return this.user.profiles.map(p => p.label).join(', ')
         }
     },
-    methods: mapActions(['setuser'])
+    methods: mapActions(['setUser'])
 }
 </script>
 
