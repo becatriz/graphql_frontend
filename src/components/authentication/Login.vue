@@ -58,7 +58,7 @@ export default {
     ...mapActions(["setUser"]),
     async loginAsync() {
       try {
-        const { data } = await this.getLoginAsync();
+        const { data } = await this.getLogin();
 
         this.setData(data.login);
         this.setStateForm();
@@ -70,7 +70,7 @@ export default {
       }
     },
 
-    async getLoginAsync() {
+    getLogin() {
       return this.$api.query({
         query: gql`
           query ($email: String!, $password: String!) {

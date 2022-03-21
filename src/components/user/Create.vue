@@ -46,7 +46,8 @@
 
 <script>
 import Errors from "../common/Errors.vue";
-import getProfiles from "../../mixins/getProfiles"
+import getProfiles from "../../mixins/getProfiles";
+import gql from "graphql-tag";
 
 export default {
   components: { Errors },
@@ -55,6 +56,7 @@ export default {
     return {
       user: {},
       data: null,
+      errors: null,
     };
   },
   computed: {
@@ -74,10 +76,64 @@ export default {
     },
   },
   methods: {
-    newUser() {
-      // implementar
+    async newUser() {
+      try {
+        const { data } = await this.registerUser();
+        this.setData(data.createUser);
+         this.setStateError(null);
+        this.setUser()
+        
+      } catch (error) {
+        this.setStateErrors(error)
+      }
     },
-   
+
+    registerUser() {
+      return this.$api.mutate({
+        mutation: gql`
+          mutation (
+            $name: String!
+            $email: String!
+            $password: String!
+            $profiles: [ProfileFilter]
+          ) {
+            createUser(
+              data: {
+                name: $name
+                email: $email
+                password: $password
+                profiles: $profiles
+              }
+            ) {
+              id
+              name
+              email
+              profiles {
+                label
+              }
+            }
+          }
+        `,
+        variables: {
+          name: this.user.name,
+          email: this.user.email,
+          password: this.user.password,
+          profiles: this.profilesSelecionados,
+        },
+      });
+    },
+
+    setData(data) {
+      this.data = data;
+    },
+
+    setStateErrors(state) {
+      this.errors = state;
+    },
+
+    setUser(){
+      this.user = {}
+    }
   },
 };
 </script>

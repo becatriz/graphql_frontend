@@ -28,7 +28,7 @@
             deletable-chips
           />
           <v-btn class="ml-0 mt-3" @click="getProfiles"> Obter profiles </v-btn>
-          <v-btn color="primary" class="ml-0 mt-3" @click="updateUser">
+          <v-btn color="primary" class="ml-0 mt-3" @click="updateUserAsync">
             Alterar Usuário
           </v-btn>
         </v-layout>
@@ -51,7 +51,8 @@
 
 <script>
 import Errors from "../common/Errors.vue";
-import getProfiles from "../../mixins/getProfiles"
+import getProfiles from "../../mixins/getProfiles";
+import gql from "graphql-tag";
 
 export default {
   components: { Errors },
@@ -61,7 +62,7 @@ export default {
       filter: {},
       user: {},
       data: null,
-      
+      errors: null,
     };
   },
   computed: {
@@ -81,10 +82,65 @@ export default {
     },
   },
   methods: {
-    updateUser() {
-      // Implementar
+    async updateUserAsync() {
+
+      try {
+        
+        const { data } = await this.updateUser();
+        this.setData(data.updateUser)
+        this.setStateError(null);
+
+      } catch (error) {
+        this.setStateErrors(error)
+      }
+
     },
-    
+
+    updateUser() {
+      return this.$api.mutate({
+        mutation: gql`
+          mutation (
+            $id: Int
+            $email_filter: String
+            $name: String
+            $password: String
+            $email: String
+            $profiles: [ProfileFilter]
+          ) {
+            updateUser(filter: { id: $id, email: $email_filter }, data: {
+              name: $name
+              email: $email
+              password: $password
+              profiles: $profiles
+            }) {
+              id
+              name
+              email
+              profiles {
+                name
+                label
+              }
+            }
+          }
+        `,
+        variables: {
+          id: this.filter.id,
+          email_filter: this.filter.email,
+          password: this.user.password,
+          name: this.user.name,
+          email: this.user.email,
+          profiles: this.profilesSelecteds
+          
+        },
+      });
+    },
+    setData(data){
+      this.data = data
+    },
+
+    setStateErrors(state){
+      this.errors = state
+    }
   },
 };
 </script>
